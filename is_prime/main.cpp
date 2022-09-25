@@ -13,6 +13,10 @@ int main() {
   while (true){
     bool is_prime = true;
     cin >> n;
+
+    if (n == 1){
+      is_prime = false;
+    }
     
     // loop to check if n is prime
     for (i = 2; i <= n/2; ++i) {
