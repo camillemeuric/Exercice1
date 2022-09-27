@@ -1,0 +1,10 @@
+REVIEW Groupe 11 (Mehri Samar  et Belhoussine Drissi Chaymae)
+
+Pour le is_prime:
+Peut être mettre une std::cout pour être plus clair pour savoir ce qu'on doit rentrer
+Apres ca n'est pas demander donc c'est juste un plus 🙂
+
+Vous avez oublié de mettre des "break" dans le while pour que le programme se termine quand il a donné les résultats. Car il continue de tourner et on peut donner des nombres à l'infini
+Conseil : pour éviter de répéter std::  --> mettre après les includes : using namespace std;
+
+Pour le Find_motive: pas de soucis tout est good
