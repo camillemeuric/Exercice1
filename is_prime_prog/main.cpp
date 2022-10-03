@@ -6,9 +6,6 @@ int main() {
 
   int i, n;
   string rawline; 
-
-  cout << "Enter a positive integer: ";
-  
   
   while (cin >> n){
     bool is_prime = true;
