@@ -7,7 +7,7 @@
 #include <cstring>
 #include <stdlib.h>
 
-#include <vector>
+#include <memory>
 
 #include "config.h"
 
@@ -21,12 +21,13 @@ public:
 //
 
 // Add suitable constructors
-    Vector() : _list()
+    Vector() : _list(std::make_shared<InternalContainer<int>>())
     {
     }
 
-    Vector(std::initializer_list<int> list) : _list(list)
+    Vector(std::initializer_list<int> list)
     {
+        _list = std::make_shared<InternalContainer<int>>(list);
     }
     // possibly more
 
@@ -34,33 +35,33 @@ public:
     Vector& operator+=(const Vector& rhs)
     {
         for (std::size_t i = 0; i < rhs.size(); i++)
-            _list.push_back(rhs[i]);
+            (*_list)[i]+=rhs[i];
 
         return *this;
     }
 
     Vector& operator+=(int value)
     {
-        _list.push_back(value);
+        _list->push_back(value);
 
         return *this;
     }
 
     Vector& operator-=(const Vector& rhs)
     {
-        for (int i = 0; i < _list.size(); i++) 
-            _list[i] -= rhs[i];
+        for (int i = 0; i < _list->size(); i++) 
+            (*_list)[i] -= rhs[i];
         return *this;
     }
 
     int &operator[](int index) const
     {
-        return _list[index];
+        return (*_list)[index];
     }
 
     int &operator[](int index)
     {
-        return _list[index];
+        return (*_list)[index];
     }
 
     Vector operator+(const Vector &other)
@@ -71,10 +72,10 @@ public:
         for (int i = 0; i < other.size(); i++, idx++) { 
             int l = other[i], r;
 
-            if (idx >= _list.size())
+            if (idx >= _list->size())
                 r = 0;
             else
-                r = _list[idx];
+                r = (*_list)[idx];
 
             x += (l + r);
         }
@@ -86,16 +87,16 @@ public:
     {
         Vector x{};
         
-        for (std::size_t i = 0; i < _list.size(); i++) 
-            x += _list[i] * n;
+        for (std::size_t i = 0; i < _list->size(); i++) 
+            x += (*_list)[i] * n;
 
         return x;
     }
 
     Vector &operator*=(const int n)
     {
-        for (std::size_t i = 0; i < _list.size(); i++) 
-            _list[i] *= n;
+        for (std::size_t i = 0; i < _list->size(); i++) 
+            (*_list)[i] *= n;
 
         return *this;
     }
@@ -105,20 +106,20 @@ public:
         int idx = 0;
         int res = 0;
         
-        for (std::size_t i = 0; i < _list.size(); i++, idx++) 
-            res += (other[i] * _list[idx]);
+        for (std::size_t i = 0; i < _list->size(); i++, idx++) 
+            res += (other[i] * (*_list)[idx]);
 
         return res;
     }
 
     bool isEmpty() const
     {
-        return _list.isEmpty();
+        return _list->isEmpty();
     }
 
     std::size_t size() const
     {
-        return _list.size();
+        return _list->size();
     }
 
     // More to go
@@ -141,18 +142,24 @@ private:
 
             InternalContainer() : _size(0), _list(nullptr)
             {
-
             };
             
             ~InternalContainer()
             {
-                std::free(_list);
+                if (_list != nullptr)
+                    std::free(_list);
             };
 
-            void resize(const int newSize)
+            void resize(int newSize)
             {
-                _list = static_cast<T *>(std::realloc(_list, sizeof(T) * newSize));
-                _size = newSize;
+                if (_list == nullptr) {
+                    _size = newSize;
+                    _list = static_cast<T *>(std::malloc(sizeof(T) * newSize));
+                    std::memset(_list, 0, sizeof(T) * newSize);
+                } else {
+                    _list = static_cast<T *>(std::realloc(_list, sizeof(T) * (newSize)));
+                    _size = newSize;
+                }
             }
 
             void push_back(T &data)
@@ -190,7 +197,7 @@ private:
     };
 
 // Member variables are ALWAYS private, and they go here
-    InternalContainer<int> _list;
+    std::shared_ptr<InternalContainer<int>> _list;
 
 };
 
