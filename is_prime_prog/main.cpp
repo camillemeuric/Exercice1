@@ -4,7 +4,8 @@ using namespace std;
 
 int main() {
 
-  int i, n;
+  int i;
+  long long n;
   string rawline; 
   
   while (cin >> n){
