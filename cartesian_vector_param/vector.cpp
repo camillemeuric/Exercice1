@@ -9,15 +9,19 @@
 
 #include <memory>
 
- Vector& Vector::operator+=(const Vector& rhs)
+Vector& Vector::operator+=(const Vector& rhs)
     {
-        for (std::size_t i = 0; i < rhs.size(); i++)
-            (*_list)[i]+=rhs[i];
+        for (std::size_t i = 0; i < rhs.size(); i++) {
+            (*_list)[i] += rhs[i];
+
+            // _list->push_back(rhs[i]);
+        }
+            
 
         return *this;
     }
 
-    Vector& Vector::operator+=(int value)
+    Vector& Vector::operator+=(value value)
     {
         _list->push_back(value);
 
@@ -31,12 +35,12 @@
         return *this;
     }
 
-    int &Vector::operator[](int index) const
+    value &Vector::operator[](int index) const
     {
         return (*_list)[index];
     }
 
-    int &Vector::operator[](int index)
+    value &Vector::operator[](int index)
     {
         return (*_list)[index];
     }

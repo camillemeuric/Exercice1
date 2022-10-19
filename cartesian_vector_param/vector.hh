@@ -21,26 +21,30 @@ public:
 //
 
 // Add suitable constructors
-    Vector() : _list(std::make_shared<InternalContainer<int>>())
+    Vector() : _list(std::make_shared<InternalContainer<value>>())
     {
     }
 
-    Vector(std::initializer_list<int> list)
+    Vector(std::initializer_list<value> list)
     {
-        _list = std::make_shared<InternalContainer<int>>(list);
+        _list = std::make_shared<InternalContainer<value>>(list);
     }
     // possibly more
 
 // Public Member functions here
     Vector& operator+=(const Vector& rhs)
     {
-        for (std::size_t i = 0; i < rhs.size(); i++)
-            (*_list)[i]+=rhs[i];
+        for (std::size_t i = 0; i < rhs.size(); i++) {
+            (*_list)[i] += rhs[i];
+
+            // _list->push_back(rhs[i]);
+        }
+            
 
         return *this;
     }
 
-    Vector& operator+=(int value)
+    Vector& operator+=(value value)
     {
         _list->push_back(value);
 
@@ -54,12 +58,12 @@ public:
         return *this;
     }
 
-    int &operator[](int index) const
+    value &operator[](int index) const
     {
         return (*_list)[index];
     }
 
-    int &operator[](int index)
+    value &operator[](int index)
     {
         return (*_list)[index];
     }
@@ -197,7 +201,7 @@ private:
     };
 
 // Member variables are ALWAYS private, and they go here
-    std::shared_ptr<InternalContainer<int>> _list;
+    std::shared_ptr<InternalContainer<value>> _list;
 
 };
 
