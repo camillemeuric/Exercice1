@@ -3,6 +3,7 @@
 #include <ostream>
 #include "config.h"
 
+
 class Vector{
 public:
 // DO NOT CHANGE THIS
